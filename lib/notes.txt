@@ -1,0 +1,35 @@
+Battleship notes:
+
+Classes:
+Player (1 board, array of ships)
+Board
+Ship
+Round
+Location
+
+BoardRenderer?
+
+Steps for playing Battleship
+* Start with two players
+* Each player starts with two boards
+* Each player places their ships
+* Decide which player goes first (player 1)
+* Player 1 calls their shot
+* Player 2 responds accordingly with 'hit' or 'miss'
+* Repeat while alternating players until all of one players squares holding ships are hit
+
+Need to record ship placements
+
+GameRunner
+  setup
+    initialize player1 (human) & player2 (computer)
+      create 2 instances of class Player
+    initialize boards
+      create an instance of class Board for each player
+    place ships
+      ships are instances of Ship class
+  start rounds and loop until game is won
+    offensive player fires shot
+      record shot in array, record shot on board, check
+
+    player
