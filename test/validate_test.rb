@@ -23,6 +23,7 @@ class ValidateTest < Minitest::Test
     refute validate.valid_coordinate_pair?("A0 AA")
     assert validate.valid_coordinate_pair?(" A0  A1 ")
     assert validate.valid_coordinate_pair?("L11 d5")
+    refute validate.valid_coordinate_pair?("B2")
   end
 
   def test_can_translate_row_column_notation
@@ -85,15 +86,56 @@ class ValidateTest < Minitest::Test
 
   def test_tells_if_ships_overlap
     validate = Validate.new
-    player = Player.new(Board.new)
+    player = Player.new(Board.new("Advanced"))
     player.board.assign_square([0, 2], "S")
+    player.board.assign_square([8, 8], "S")
 
-    assert validate.ship_not_overlap?(player, [0, 0], [0, 1])
-    refute validate.ship_not_overlap?(player, [0, 0], [0, 3])
+    assert validate.ships_not_overlap?(player, [0, 0], [0, 1])
+    refute validate.ships_not_overlap?(player, [0, 0], [0, 3])
+    assert validate.ships_not_overlap?(player, [7, 7], [9, 7])
+    refute validate.ships_not_overlap?(player, [8, 8], [8,10])
   end
-  # def test_asserts_validity_of_placement
-  #   validate = Validate.new
-  #
-  #   assert validate.valid_placement?()
-  # end
+
+  def test_asserts_validity_of_placement_is_not_diagonal
+    validate = Validate.new
+    player = Player.new(Board.new("Advanced"))
+
+    assert validate.valid_placement?(player, 3, [[0, 0], [0, 2]])
+    refute validate.valid_placement?(player, 3, [[0, 0], [1, 1]])
+    assert validate.valid_placement?(player, 4, [[11, 11], [8, 11]])
+    refute validate.valid_placement?(player, 4, [[11, 11], [9, 10]])
+  end
+
+  def test_asserts_validity_of_placement_is_correct_distance_for_ship
+    validate = Validate.new
+    player = Player.new(Board.new("Advanced"))
+
+    assert validate.valid_placement?(player, 3, [[0, 0], [0, 2]])
+    refute validate.valid_placement?(player, 2, [[0, 0], [0, 2]])
+    assert validate.valid_placement?(player, 4, [[11, 9], [11, 6]])
+    refute validate.valid_placement?(player, 3, [[11, 9], [11, 6]])
+  end
+
+  def test_asserts_validity_of_placement_is_in_bounds
+    validate = Validate.new
+    player = Player.new(Board.new("Advanced"))
+
+    assert validate.valid_placement?(player, 3, [[10, 0], [10, 2]])
+    refute validate.valid_placement?(player, 3, [[0, 10], [0, 12]])
+    assert validate.valid_placement?(player, 4, [[11, 9], [11, 6]])
+    refute validate.valid_placement?(player, 4, [[11, 9], [11, 12]])
+  end
+
+  def test_asserts_validity_of_placement_is_not_overlapping
+    validate = Validate.new
+    player = Player.new(Board.new("Advanced"))
+    player.board.assign_square([0, 2], "S")
+    player.board.assign_square([8, 8], "S")
+
+
+    assert validate.valid_placement?(player, 3, [[0, 1], [2, 1]])
+    refute validate.valid_placement?(player, 3, [[0, 1], [0, 3]])
+    assert validate.valid_placement?(player, 4, [[8, 7], [8, 4]])
+    refute validate.valid_placement?(player, 4, [[6, 8], [9, 8]])
+  end
 end

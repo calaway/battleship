@@ -26,7 +26,8 @@ class Gamemaster
     welcome_response = ""
     until welcome_response == "p"
       print messages.welcome(welcome_response)
-      welcome_response = gets.chomp
+      abort if welcome_response == "q" or "quit"
+      welcome_response = gets.strip.downcase
     end
   end
 
@@ -35,15 +36,15 @@ class Gamemaster
     validate = Validate.new
     print messages.setup_sequence
     player1.ships.each do |ship|
-      valid_placement = false
-      until valid_placement == true
+      placement_valid = false
+      until placement_valid == true
         print messages.place_your_ship(ship)
         placement_response = gets.strip
-        valid_placement = validate.valid_coordinate_pair?(placement_response) &&
-                          validate.valid_placement?(player1, placement_response)
-        messages.invalid_placement if valid_placement == false
+        placement_valid = validate.valid_coordinate_pair?(placement_response) &&
+                          validate.valid_placement?(player1, ship, validate.format_coordinate_pair(placement_response))
+        messages.invalid_placement if placement_valid == false
       end
-      placement_response = validate.format_placement(placement_response)
+      placement_response = validate.format_coordinate_pair(placement_response)
       player1.place_ship(placement_response)
     end
   end

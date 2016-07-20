@@ -66,10 +66,19 @@ class Validate
     size.include?(coordinates[0]) && size.include?(coordinates[1])
   end
 
-  def ship_not_overlap?(player, coordinate0, coordinate1)
+  def ships_not_overlap?(player, coordinate0, coordinate1)
     coordinate_fill = coordinate_fill(coordinate0, coordinate1)
     coordinate_fill.all? do |coord|
       player.board.board[coord[0]][coord[1]] != "S"
     end
+  end
+
+  def valid_placement?(player, ship, coordinates)
+    coordinate0, coordinate1 = coordinates
+    same_row_or_column?(coordinate0, coordinate1) &&
+    distance(coordinate0, coordinate1) + 1 == ship &&
+    inbounds?(coordinate0, player.board.difficulty) &&
+    inbounds?(coordinate1, player.board.difficulty) &&
+    ships_not_overlap?(player, coordinate0, coordinate1)
   end
 end
