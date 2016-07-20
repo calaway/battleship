@@ -49,8 +49,8 @@ class GamemasterTest < Minitest::Test
 
   def test_player_can_place_ships
     gamemaster = Gamemaster.new
-    gamemaster.player0.place_ship(2, [[0, 0], [0, 1]])
-    gamemaster.player0.place_ship(3, [[1, 2], [2, 2], [3, 2]])
+    gamemaster.player0.place_ship([[0, 0], [0, 1]])
+    gamemaster.player0.place_ship([[1, 2], [2, 2], [3, 2]])
 
     assert_equal "S", gamemaster.player0.board.board[0][0]
     assert_equal "S", gamemaster.player0.board.board[0][1]

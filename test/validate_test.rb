@@ -1,7 +1,30 @@
+require 'simplecov'
+SimpleCov.start
 require 'minitest/autorun'
-require './lib/Validate'
+require './lib/validate'
+require './lib/player'
+require './lib/board'
 
 class ValidateTest < Minitest::Test
+  def test_assert_validity_of_given_coordinate
+    validate = Validate.new
+
+    assert validate.valid_coordinates?("A1")
+    assert validate.valid_coordinates?("z12")
+    assert validate.valid_coordinates?(" b1")
+    refute validate.valid_coordinates?("1A")
+    refute validate.valid_coordinates?("Z99 D3")
+  end
+
+  def test_asserts_validity_of_given_coordinate_pair
+    validate = Validate.new
+
+    refute validate.valid_coordinate_pair?("A0 j111")
+    refute validate.valid_coordinate_pair?("A0 AA")
+    assert validate.valid_coordinate_pair?(" A0  A1 ")
+    assert validate.valid_coordinate_pair?("L11 d5")
+  end
+
   def test_can_translate_row_column_notation
     validate = Validate.new
 
@@ -23,9 +46,54 @@ class ValidateTest < Minitest::Test
   def test_can_return_distance_between_two_coordinates
     validate = Validate.new
 
-    assert_equal 0, validate.distance([0, 0], [0, 1])
-    assert_equal 0, validate.distance([2, 1], [0, 3])
-    assert_equal 0, validate.distance([11, 1], [11, 11])
-    assert_equal 0, validate.distance([10, 6], [6, 10])
+    assert_equal 1, validate.distance([0, 0], [0, 1])
+    assert_equal 4, validate.distance([2, 1], [0, 3])
+    assert_equal 10, validate.distance([11, 1], [11, 11])
+    assert_equal 8, validate.distance([10, 6], [6, 10])
   end
+
+  def test_can_fill_in_intermediate_coordinates
+    validate = Validate.new
+    result = [[0, 0], [0, 1], [0, 2], [0, 3]]
+    assert_equal result, validate.coordinate_fill([0, 0], [0, 3])
+
+    result = [[11, 9], [11, 10], [11, 11]]
+    assert_equal result, validate.coordinate_fill([11, 9], [11, 11])
+
+    result = [[3, 5], [4, 5], [5, 5], [6, 5]]
+    assert_equal result, validate.coordinate_fill([6, 5], [3, 5])
+
+    result = [[3, 8], [3, 9], [3, 10], [3, 11]]
+    assert_equal result, validate.coordinate_fill([3, 11], [3, 8])
+  end
+
+  def test_validate_ship_is_in_bounds
+    validate = Validate.new
+
+    refute validate.inbounds?([0, 12])
+    assert validate.inbounds?([3, 1])
+    assert validate.inbounds?([11, 11], "Advanced")
+    refute validate.inbounds?([8, 3], "Intermediate")
+  end
+
+  def test_returns_coordinate_pair_from_user_input
+    validate = Validate.new
+
+    assert_equal [[0, 0], [0, 1]], validate.format_coordinate_pair(" A1  A2 ")
+    assert_equal [[11, 10], [1, 1]], validate.format_coordinate_pair(" l11  b2 ")
+  end
+
+  def test_tells_if_ships_overlap
+    validate = Validate.new
+    player = Player.new(Board.new)
+    player.board.assign_square([0, 2], "S")
+
+    assert validate.ship_not_overlap?(player, [0, 0], [0, 1])
+    refute validate.ship_not_overlap?(player, [0, 0], [0, 3])
+  end
+  # def test_asserts_validity_of_placement
+  #   validate = Validate.new
+  #
+  #   assert validate.valid_placement?()
+  # end
 end

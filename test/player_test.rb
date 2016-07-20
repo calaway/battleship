@@ -30,4 +30,10 @@ class PlayerTest < Minitest::Test
                   [nil, nil, "S", nil],
                   [nil, nil, "S", nil]], player.board.board
   end
+
+  def test_player_has_two_ships_by_default
+    player = Player.new(Board.new)
+
+    assert_equal [2, 3], player.ships
+  end
 end

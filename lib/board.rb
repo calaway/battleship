@@ -17,13 +17,4 @@ class Board
     row, column = coordinates
     board[row][column] = status
   end
-
-  # def square_hit_or_miss_status(human_coordinates)
-  #   row, column = index_translation(human_coordinates)
-  #
-  # end
-
-  # def display_board
-  #
-  # end
 end
