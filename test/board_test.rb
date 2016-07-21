@@ -1,7 +1,8 @@
 require 'simplecov'
 SimpleCov.start
 require 'minitest/autorun'
-require './lib/board.rb'
+require './lib/board'
+require './lib/player'
 
 class BoardTest < Minitest::Test
   def test_can_create_board
@@ -103,11 +104,11 @@ class BoardTest < Minitest::Test
 
     assert_equal "H", board.board[0][0]
     assert_equal "M", board.board[1][2]
-    assert_equal nil, board.board[0][1]
-    assert_equal [["H", nil, nil, nil],
-                  [nil, nil, "M", nil],
-                  [nil, nil, nil, nil],
-                  [nil, "S", nil, nil]], board.board
+    assert_equal " ", board.board[0][1]
+    assert_equal [["H", " ", " ", " "],
+                  [" ", " ", "M", " "],
+                  [" ", " ", " ", " "],
+                  [" ", "S", " ", " "]], board.board
   end
 
   def test_can_assign_individual_square_on_advanced_board
@@ -119,7 +120,7 @@ class BoardTest < Minitest::Test
     assert_equal "H", board.board[0][0]
     assert_equal "M", board.board[11][10]
     assert_equal "S", board.board[10][11]
-    assert_equal nil, board.board[5][5]
+    assert_equal " ", board.board[5][5]
   end
 
   def test_querying_square_returns_hit_or_miss_status
@@ -133,15 +134,14 @@ class BoardTest < Minitest::Test
   end
 
   def test_can_return_visual_display_of_board
-    skip
-    board = Board.new
+    player = Player.new(Board.new)
+    display_string = "===========\n. 1 2 3 4  \nA          \nB          \nC          \nD          \n==========="
 
-    assert_equal "===========
-. 1 2 3 4
-A
-B
-C
-D
-===========", board.display_board
+    assert_equal display_string, player.board.display_board
+
+    player.place_ship([[0, 1], [0, 3]])
+    display_string = "===========\n. 1 2 3 4  \nA          \nB          \nC          \nD          \n==========="
+
+    assert_equal display_string, player.board.display_board
   end
 end

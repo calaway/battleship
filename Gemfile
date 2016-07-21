@@ -4,3 +4,4 @@ gem "minitest"
 gem "pry"
 gem "rake"
 gem "simplecov", :require => false, :group => :test
+gem "mrspec"

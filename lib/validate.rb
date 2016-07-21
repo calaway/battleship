@@ -1,11 +1,11 @@
-class Validate
-  def valid_coordinates?(user_input)
+module Validate
+  def self.valid_coordinates?(user_input)
     user_input = user_input.upcase.strip
     ('A'..'Z').include?(user_input[0]) &&
     ('0'..'99').to_a.include?(user_input[1..-1])
   end
 
-  def valid_coordinate_pair?(user_input)
+  def self.valid_coordinate_pair?(user_input)
     split = user_input.split(' ').map { |coord| coord.strip }
     if split.length != 2
       false
@@ -16,7 +16,7 @@ class Validate
     end
   end
 
-  def coordinate_translation(human_notation)
+  def self.coordinate_translation(human_notation)
     human_notation = human_notation.upcase.strip
     matrix_notation = []
     matrix_notation[0] = human_notation[0].ord - "A".ord
@@ -24,23 +24,23 @@ class Validate
     matrix_notation
   end
 
-  def format_coordinate_pair(user_input)
+  def self.format_coordinate_pair(user_input)
     human_notation = user_input.split(' ').map { |coord| coord.strip }
     matrix_notation = human_notation.map do |coord|
       coordinate_translation(coord)
     end
   end
 
-  def same_row_or_column?(coordinate0, coordinate1)
+  def self.same_row_or_column?(coordinate0, coordinate1)
     coordinate0[0] == coordinate1[0] || coordinate0[1] == coordinate1[1]
   end
 
-  def distance(coordinate0, coordinate1)
+  def self.distance(coordinate0, coordinate1)
     (coordinate0[0] - coordinate1[0]).abs +
     (coordinate0[1] - coordinate1[1]).abs
   end
 
-  def coordinate_fill(coordinate0, coordinate1)
+  def self.coordinate_fill(coordinate0, coordinate1)
     if coordinate0[0] == coordinate1[0]
       axis = 1
     else
@@ -55,7 +55,7 @@ class Validate
     end
   end
 
-  def inbounds?(coordinates, difficulty = "Beginner")
+  def self.inbounds?(coordinates, difficulty = "Beginner")
     if difficulty == "Advanced"
       size = (0..11).to_a
     elsif difficulty == "Intermediate"
@@ -66,14 +66,14 @@ class Validate
     size.include?(coordinates[0]) && size.include?(coordinates[1])
   end
 
-  def ships_not_overlap?(player, coordinate0, coordinate1)
+  def self.ships_not_overlap?(player, coordinate0, coordinate1)
     coordinate_fill = coordinate_fill(coordinate0, coordinate1)
     coordinate_fill.all? do |coord|
       player.board.board[coord[0]][coord[1]] != "S"
     end
   end
 
-  def valid_placement?(player, ship, coordinates)
+  def self.valid_placement?(player, ship, coordinates)
     coordinate0, coordinate1 = coordinates
     same_row_or_column?(coordinate0, coordinate1) &&
     distance(coordinate0, coordinate1) + 1 == ship &&

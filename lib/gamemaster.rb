@@ -18,34 +18,50 @@ class Gamemaster
   def start
     welcome_sequence
     setup_sequence
+    main_gameplay_sequence
   end
 
   def welcome_sequence
-    messages = Messages.new
+    clear_screen
     puts "Welcome to BATTLESHIP"
     welcome_response = ""
-    until welcome_response == "p"
-      print messages.welcome(welcome_response)
-      abort if welcome_response == "q" or "quit"
+    until welcome_response == "p" or welcome_response == "play"
+      print Messages.welcome(welcome_response)
+      abort if welcome_response == "q" or welcome_response == "quit"
       welcome_response = gets.strip.downcase
     end
   end
 
   def setup_sequence
-    messages = Messages.new
-    validate = Validate.new
-    print messages.setup_sequence
+    clear_screen
+    print Messages.setup_sequence
+    live_player_ship_placement_sequence
+    clear_screen
+    print Messages.setup_sequence_end
+    puts player1.board.display_board
+  end
+
+  def live_player_ship_placement_sequence
     player1.ships.each do |ship|
       placement_valid = false
       until placement_valid == true
-        print messages.place_your_ship(ship)
+        print Messages.place_your_ship(ship)
         placement_response = gets.strip
-        placement_valid = validate.valid_coordinate_pair?(placement_response) &&
-                          validate.valid_placement?(player1, ship, validate.format_coordinate_pair(placement_response))
-        messages.invalid_placement if placement_valid == false
+        placement_valid = Validate.valid_coordinate_pair?(placement_response) &&
+        Validate.valid_placement?(player1, ship, Validate.format_coordinate_pair(placement_response))
+        print Messages.invalid_placement if placement_valid == false
       end
-      placement_response = validate.format_coordinate_pair(placement_response)
+      placement_response = Validate.format_coordinate_pair(placement_response)
+      placement_response = Validate.coordinate_fill
       player1.place_ship(placement_response)
     end
+  end
+
+  def main_gameplay_sequence
+
+  end
+
+  def clear_screen
+    print "\e[2J\e[f"
   end
 end

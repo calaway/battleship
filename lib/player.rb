@@ -1,3 +1,5 @@
+require "./lib/validate"
+
 class Player
   attr_reader :board,
               :ships
@@ -8,7 +10,8 @@ class Player
   end
 
   def place_ship(coordinates)
-    coordinates.each do |coordinate|
+    coordinate_fill = Validate.coordinate_fill(coordinates[0], coordinates[1])
+    coordinate_fill.each do |coordinate|
       board.assign_square(coordinate, "S")
     end
   end

@@ -10,11 +10,21 @@ class Board
                    "Intermediate" => 8,
                    "Advanced"     => 12}
     @size = board_sizes[@difficulty]
-    @board = Array.new(@size) { Array.new(@size) }
+    @board = Array.new(@size) { Array.new(@size, " ") }
   end
 
   def assign_square(coordinates, status)
     row, column = coordinates
     board[row][column] = status
+  end
+
+  def display_board
+    display = ["===========\n. 1 2 3 4  ", "\nA ", " \nB ", " \nC ", " \nD ", " \n==========="]
+    board.each_with_index do |row, row_index|
+      row.each do |column|
+        display[row_index + 1] << "#{column} "
+      end
+    end
+    display.join
   end
 end

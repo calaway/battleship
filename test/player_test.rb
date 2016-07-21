@@ -23,14 +23,14 @@ class PlayerTest < Minitest::Test
   def test_player_can_place_ships
     player = Player.new(Board.new)
     player.place_ship([[0, 0], [0, 1]])
-    player.place_ship([[1, 2], [2, 2], [3, 2]])
+    player.place_ship([[1, 2], [3, 2]])
 
     assert_equal "S", player.board.board[0][0]
     assert_equal "S", player.board.board[0][1]
-    assert_equal [["S", "S", nil, nil],
-                  [nil, nil, "S", nil],
-                  [nil, nil, "S", nil],
-                  [nil, nil, "S", nil]], player.board.board
+    assert_equal [["S", "S", " ", " "],
+                  [" ", " ", "S", " "],
+                  [" ", " ", "S", " "],
+                  [" ", " ", "S", " "]], player.board.board
   end
 
   def test_player_has_two_ships_by_default
