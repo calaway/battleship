@@ -65,4 +65,9 @@ class MessagesTest < Minitest::Test
     message = "Press ENTER to continue.\n"
     assert_equal message, Messages.end_turn
   end
+
+  def test_can_return_invalid_attack_message
+    message = "The coordinates you entered are invalid. Please ensure you submit in the format 'A1', that it is within the board boundaries, and that you have not fired there before.\n\nEnter attack coordinate:\n> "
+    assert Messages.cpu_attacked([0, 0]).class == String
+  end
 end

@@ -153,7 +153,18 @@ class ValidateTest < Minitest::Test
 
   def test_valid_human_attack
     player = Player.new(Board.new)
+    player.board.assign_square([0, 2], "H")
 
     refute Validate.valid_human_attack?('e1', player.board)
+    assert Validate.valid_human_attack?('a1', player.board)
+    refute Validate.valid_human_attack?('a3', player.board)
+    refute Validate.valid_human_attack?('3a', player.board)
+  end
+
+  def test_can_generate_random_cpu_attack
+    player = Player.new(Board.new)
+    coordinates = Validate.random_attack_generator(player.board.size)
+
+    assert Validate.inbounds?(coordinates)
   end
 end
