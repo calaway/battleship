@@ -1,4 +1,5 @@
 require "./lib/validate"
+require "pry"
 
 class Player
   attr_reader :board,

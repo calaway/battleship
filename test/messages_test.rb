@@ -38,4 +38,14 @@ class MessagesTest < Minitest::Test
     message = "Unfortunately your ship placement is not valid. Please review the following requirements and try again:\n* Enter only the coordinates corresponding to the two ends of your ship.\n* The format of entries must match this example: 'B2 B4'.\n* Entries must be on the same row or column (no diagonal ship placements).\n* Coordinates cannot be outside of the board boundaries.\n* Ships cannot overlap.\n\n"
     assert_equal message, Messages.invalid_placement
   end
+
+  def test_can_return_setup_sequence_end_message
+    message = "You have placed your ships. Prepare for battle!\n\n"
+    assert_equal message, Messages.setup_sequence_end
+  end
+
+  def test_can_return_clear_screen_message
+    message = "\e[2J\e[f"
+    assert_equal message, Messages.clear_screen
+  end
 end

@@ -5,8 +5,8 @@ require './lib/validate'
 
 class Gamemaster
   attr_reader :player0,
-              :player1,
-              :difficulty
+  :player1,
+  :difficulty
 
   def initialize(difficulty = "Beginner")
     @difficulty = "Beginner"
@@ -22,7 +22,7 @@ class Gamemaster
   end
 
   def welcome_sequence
-    clear_screen
+    print Messages.clear_screen
     puts "Welcome to BATTLESHIP"
     welcome_response = ""
     until welcome_response == "p" or welcome_response == "play"
@@ -33,10 +33,11 @@ class Gamemaster
   end
 
   def setup_sequence
-    clear_screen
+    cpu_ship_placement
+    print Messages.clear_screen
     print Messages.setup_sequence
     live_player_ship_placement_sequence
-    clear_screen
+    print Messages.clear_screen
     print Messages.setup_sequence_end
     puts player1.board.display_board
   end
@@ -52,16 +53,18 @@ class Gamemaster
         print Messages.invalid_placement if placement_valid == false
       end
       placement_response = Validate.format_coordinate_pair(placement_response)
-      placement_response = Validate.coordinate_fill
       player1.place_ship(placement_response)
     end
   end
 
-  def main_gameplay_sequence
-
-  end
-
-  def clear_screen
-    print "\e[2J\e[f"
+  def cpu_ship_placement
+    player0.ships.each do |ship|
+      placement_valid = false
+      until placement_valid == true
+        coordinates = Validate.random_coordinate_generator(ship, player0.board.size)
+        placement_valid = Validate.valid_placement?(player0, ship, coordinates)
+      end
+      player0.place_ship(coordinates)
+    end
   end
 end

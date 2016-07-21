@@ -136,12 +136,14 @@ class BoardTest < Minitest::Test
   def test_can_return_visual_display_of_board
     player = Player.new(Board.new)
     display_string = "===========\n. 1 2 3 4  \nA          \nB          \nC          \nD          \n==========="
-
     assert_equal display_string, player.board.display_board
 
+    display_string = "===========\n. 1 2 3 4  \nA   S S S  \nB          \nC          \nD          \n==========="
     player.place_ship([[0, 1], [0, 3]])
-    display_string = "===========\n. 1 2 3 4  \nA          \nB          \nC          \nD          \n==========="
+    assert_equal display_string, player.board.display_board
 
+    player.place_ship([[3, 2], [1, 2]])
+    display_string = "===========\n. 1 2 3 4  \nA   S S S  \nB     S    \nC     S    \nD     S    \n==========="
     assert_equal display_string, player.board.display_board
   end
 end

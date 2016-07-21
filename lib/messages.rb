@@ -24,4 +24,8 @@ module Messages
   def self.setup_sequence_end
     "You have placed your ships. Prepare for battle!\n\n"
   end
+
+  def self.clear_screen
+    "\e[2J\e[f"
+  end
 end

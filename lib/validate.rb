@@ -81,4 +81,15 @@ module Validate
     inbounds?(coordinate1, player.board.difficulty) &&
     ships_not_overlap?(player, coordinate0, coordinate1)
   end
+
+  def self.random_coordinate_generator(ship, board_size)
+    row = rand(board_size)
+    column = rand(board_size - (ship - 1))
+    coordinates = [[row, column], [row, (column + ship - 1)]]
+    if rand(2) == 1
+      coordinates = coordinates.map { |coord| coord.reverse }
+    end
+    coordinates
+  end
+
 end
