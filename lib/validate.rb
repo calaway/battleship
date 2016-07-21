@@ -93,13 +93,13 @@ module Validate
     coordinates
   end
 
-  def self.valid_attack?(human_coordinates, board)
-    unless valid_coordinates?(human_coordinates)
-      return false
-    end
-    matrix_notation = coordinate_translation(human_coordinates)
+  def self.valid_attack?(matrix_notation, board)
     row, column = matrix_notation
     inbounds?(matrix_notation) &&
     !["H", "M"].include?(board.board[row][column])
+  end
+
+  def self.random_attack_generator(board_size)
+    [rand(board_size), rand(board_size)]
   end
 end

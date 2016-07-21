@@ -38,7 +38,11 @@ module Messages
   end
 
   def self.end_turn
-    "Press ENTER to end your turn.\n"
+    "Press ENTER to continue.\n"
+  end
+
+  def self.cpu_attacked(coordinates)
+    "Your opponent has attacked #{coordinates[0].to_s.tr("0-9", "A-I")}#{coordinates[1] + 1} as shown below.\n"
   end
 
   def self.clear_screen

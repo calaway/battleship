@@ -70,7 +70,7 @@ class Gamemaster
   def main_gameplay_sequence
     while true
       live_player_shot_sequence
-      # cpu_shot_sequence
+      cpu_shot_sequence
     end
   end
 
@@ -79,9 +79,23 @@ class Gamemaster
     display_both_boards
     print "Enter attack coordinate:\n> "
     attack_coordinates = gets.strip
-    until Validate.valid_attack?(attack_coordinates, player0.board)
+    if !Validate.valid_coordinates?(attack_coordinates)
+      valid = false
+    elsif Validate.valid_attack?(Validate.coordinate_translation(attack_coordinates), player0.board)
+      valid = true
+    else
+      valid = false
+    end
+    until valid
       print Messages.invalid_attack
       attack_coordinates = gets.strip
+      if !Validate.valid_coordinates?(attack_coordinates)
+        valid = false
+      elsif Validate.valid_attack?(Validate.coordinate_translation(attack_coordinates, player0.board))
+        valid = true
+      else
+        valid = false
+      end
     end
     attack_coordinates = Validate.coordinate_translation(attack_coordinates)
     print Messages.hit_or_miss(player0.board.hit?(attack_coordinates))
@@ -90,6 +104,23 @@ class Gamemaster
       abort("YOU WIN !!!")
     end
     display_both_boards
+    print Messages.end_turn
+    gets
+  end
+
+  def cpu_shot_sequence
+    valid = false
+    until valid
+      attack_coordinates = Validate.random_attack_generator(player1.board.size)
+      valid = Validate.valid_attack?(attack_coordinates, player1.board)
+    end
+    player1.board.attack(attack_coordinates)
+    print Messages.cpu_attacked(attack_coordinates)
+    display_both_boards
+    unless player1.board.board.flatten.include?("S")
+      abort("You lose.\n\nGAME OVER")
+    end
+    print Messages.clear_screen
     print Messages.end_turn
     gets
   end

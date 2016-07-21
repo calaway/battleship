@@ -62,7 +62,7 @@ class MessagesTest < Minitest::Test
   end
 
   def test_can_return_end_turn_message
-    message = "Press ENTER to end your turn.\n"
+    message = "Press ENTER to continue.\n"
     assert_equal message, Messages.end_turn
   end
 end
