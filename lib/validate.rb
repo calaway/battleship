@@ -102,4 +102,14 @@ module Validate
   def self.random_attack_generator(board_size)
     [rand(board_size), rand(board_size)]
   end
+
+  def self.valid_human_attack?(human_coordinates, board)
+    if !valid_coordinates?(human_coordinates)
+      false
+    elsif valid_attack?(coordinate_translation(human_coordinates), board)
+      true
+    else
+      false
+    end
+  end
 end

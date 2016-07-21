@@ -144,13 +144,16 @@ class ValidateTest < Minitest::Test
     player.board.assign_square([3, 3], "M")
     player.board.assign_square([2, 3], "S")
 
-    refute Validate.valid_attack?('a3', player.board)
-    refute Validate.valid_attack?(' D4 ', player.board)
-    assert Validate.valid_attack?("c4  ", player.board)
-    assert Validate.valid_attack?("d3", player.board)
-    refute Validate.valid_attack?("e1", player.board)
-    refute Validate.valid_attack?("a5", player.board)
-    refute Validate.valid_attack?(false, player.board)
-    refute Validate.valid_attack?([1, 1], player.board)
+    refute Validate.valid_attack?([0, 2], player.board)
+    refute Validate.valid_attack?([3, 3], player.board)
+    assert Validate.valid_attack?([2, 3], player.board)
+    assert Validate.valid_attack?([3, 2], player.board)
+    refute Validate.valid_attack?([4, 0], player.board)
+  end
+
+  def test_valid_human_attack
+    player = Player.new(Board.new)
+
+    refute Validate.valid_human_attack?('e1', player.board)
   end
 end
