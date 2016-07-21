@@ -125,4 +125,32 @@ class ValidateTest < Minitest::Test
     assert Validate.valid_placement?(player, 4, [[8, 7], [8, 4]])
     refute Validate.valid_placement?(player, 4, [[6, 8], [9, 8]])
   end
+
+  def test_can_generate_valid_random_coordinages
+    player = Player.new(Board.new)
+    coordinates = Validate.random_coordinate_generator(2, 4)
+    assert Validate.valid_placement?(player, 2, coordinates)
+
+    coordinates = Validate.random_coordinate_generator(3, 4)
+    assert Validate.valid_placement?(player, 3, coordinates)
+
+    coordinates = Validate.random_coordinate_generator(4, 4)
+    assert Validate.valid_placement?(player, 4, coordinates)
+  end
+
+  def test_asserts_validity_of_attack
+    player = Player.new(Board.new)
+    player.board.assign_square([0, 2], "H")
+    player.board.assign_square([3, 3], "M")
+    player.board.assign_square([2, 3], "S")
+
+    refute Validate.valid_attack?('a3', player.board)
+    refute Validate.valid_attack?(' D4 ', player.board)
+    assert Validate.valid_attack?("c4  ", player.board)
+    assert Validate.valid_attack?("d3", player.board)
+    refute Validate.valid_attack?("e1", player.board)
+    refute Validate.valid_attack?("a5", player.board)
+    refute Validate.valid_attack?(false, player.board)
+    refute Validate.valid_attack?([1, 1], player.board)
+  end
 end

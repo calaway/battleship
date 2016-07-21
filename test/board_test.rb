@@ -123,27 +123,44 @@ class BoardTest < Minitest::Test
     assert_equal " ", board.board[5][5]
   end
 
-  def test_querying_square_returns_hit_or_miss_status
-    skip
-    board = Board.new("Advanced")
-    board.assign_square("a1", "H")
-    board.assign_square("l11", "M")
-    board.assign_square("K12", "S")
-
-    assert_equal nil, square_hit_or_miss_status("a1")
-  end
-
   def test_can_return_visual_display_of_board
     player = Player.new(Board.new)
-    display_string = "===========\n. 1 2 3 4  \nA          \nB          \nC          \nD          \n==========="
+    display_string = "===========\n. 1 2 3 4  \nA          \nB          \nC          \nD          \n===========\n"
     assert_equal display_string, player.board.display_board
 
-    display_string = "===========\n. 1 2 3 4  \nA   S S S  \nB          \nC          \nD          \n==========="
+    display_string = "===========\n. 1 2 3 4  \nA   S S S  \nB          \nC          \nD          \n===========\n"
     player.place_ship([[0, 1], [0, 3]])
     assert_equal display_string, player.board.display_board
 
     player.place_ship([[3, 2], [1, 2]])
-    display_string = "===========\n. 1 2 3 4  \nA   S S S  \nB     S    \nC     S    \nD     S    \n==========="
+    display_string = "===========\n. 1 2 3 4  \nA   S S S  \nB     S    \nC     S    \nD     S    \n===========\n"
     assert_equal display_string, player.board.display_board
+  end
+
+  def test_can_attack_board
+    board = Board.new
+    board.assign_square([0, 0], "S")
+    board.assign_square([1, 2], "S")
+    board.assign_square([3, 1], "S")
+    board.attack([0, 0])
+    board.attack([3, 1])
+    board.attack([1, 1])
+
+    assert_equal "H", board.board[0][0]
+    assert_equal "S", board.board[1][2]
+    assert_equal "H", board.board[3][1]
+    assert_equal "M", board.board[1][1]
+  end
+
+  def test_tells_if_attack_is_a_hit
+    board = Board.new
+    board.assign_square([0, 0], "S")
+    board.assign_square([1, 2], "S")
+    board.assign_square([3, 1], "S")
+
+    refute board.hit?([1, 1])
+    assert board.hit?([1, 2])
+    assert board.hit?([3, 1])
+    refute board.hit?([3, 3])
   end
 end

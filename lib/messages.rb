@@ -25,6 +25,22 @@ module Messages
     "You have placed your ships. Prepare for battle!\n\n"
   end
 
+  def self.invalid_attack
+    "The coordinates you entered are invalid. Please ensure you submit in the format 'A1', that it is within the board boundaries, and that you have not fired there before.\n\nEnter attack coordinate:\n> "
+  end
+
+  def self.hit_or_miss(boolean)
+    if boolean
+      "It's a hit!!!\n\n"
+    else
+      "It's a miss.\n\n"
+    end
+  end
+
+  def self.end_turn
+    "Press ENTER to end your turn.\n"
+  end
+
   def self.clear_screen
     "\e[2J\e[f"
   end

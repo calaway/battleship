@@ -1,5 +1,6 @@
 module Validate
   def self.valid_coordinates?(user_input)
+    return false unless user_input.class == String
     user_input = user_input.upcase.strip
     ('A'..'Z').include?(user_input[0]) &&
     ('0'..'99').to_a.include?(user_input[1..-1])
@@ -92,4 +93,13 @@ module Validate
     coordinates
   end
 
+  def self.valid_attack?(human_coordinates, board)
+    unless valid_coordinates?(human_coordinates)
+      return false
+    end
+    matrix_notation = coordinate_translation(human_coordinates)
+    row, column = matrix_notation
+    inbounds?(matrix_notation) &&
+    !["H", "M"].include?(board.board[row][column])
+  end
 end
